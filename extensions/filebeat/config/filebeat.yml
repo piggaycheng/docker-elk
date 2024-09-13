@@ -30,6 +30,15 @@ filebeat.autodiscover:
                   type: container
                   paths:
                     - /var/lib/docker/containers/${data.container.id}/*-json.log
+        - condition:
+            contains:
+              docker.container.image: "fastapi"
+          config:
+            - type: container
+              paths:
+                - /var/lib/docker/containers/${data.docker.container.id}/*.log
+              fields:
+                out_index: fastapi
 
 processors:
   - add_cloud_metadata: ~
@@ -44,6 +53,9 @@ output.elasticsearch:
   hosts: [ http://elasticsearch:9200 ]
   username: filebeat_internal
   password: ${FILEBEAT_INTERNAL_PASSWORD}
+  indices:
+    - index: "fastapi-filebeat-%{[agent.version]}"
+      when.equals.fields.out_index: fastapi
 
 ## HTTP endpoint for health checking
 ## https://www.elastic.co/guide/en/beats/filebeat/current/http-endpoint.html
@@ -52,3 +64,5 @@ output.elasticsearch:
 http:
   enabled: true
   host: 0.0.0.0
+
+# logging.level: debug

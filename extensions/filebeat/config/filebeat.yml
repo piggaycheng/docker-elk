@@ -9,6 +9,18 @@ filebeat.config:
     path: ${path.config}/modules.d/*.yml
     reload.enabled: false
 
+filebeat.inputs:
+  - type: filestream
+    id: filestream-oht-alarm
+    paths:
+      - /var/log/filebeat-log-source/**/alarm/alarm_*
+    fields:
+      data_stream:
+        type: logs
+        dataset: oht
+        namespace: alarm
+    fields_under_root: true
+
 filebeat.autodiscover:
   providers:
     # The Docker autodiscover provider automatically retrieves logs from Docker
@@ -60,15 +72,15 @@ monitoring:
 
 output.kafka:
   hosts: ["172.20.125.78:9092"]
-  topic: "logs-filebeat-%{[agent.version]}"
   partition.round_robin:
     reachable_only: false
   required_acks: 1
   compression: gzip
   max_message_bytes: 1000000
   topics:
-    - topic: "logs-fastapi-filebeat-%{[agent.version]}"
-      when.equals.fields.out_index: fastapi
+    # - topic: "logs-fastapi-filebeat-%{[agent.version]}"
+    #   when.equals.fields.out_index: fastapi
+    - topic: "%{[data_stream][type]}-%{[data_stream][dataset]}-%{[data_stream][namespace]}-filebeat-%{[agent.version]}"
 
 ## HTTP endpoint for health checking
 ## https://www.elastic.co/guide/en/beats/filebeat/current/http-endpoint.html
@@ -77,5 +89,4 @@ output.kafka:
 http:
   enabled: true
   host: 0.0.0.0
-
 # logging.level: debug

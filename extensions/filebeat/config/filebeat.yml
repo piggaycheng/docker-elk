@@ -20,6 +20,16 @@ filebeat.inputs:
         dataset: oht
         namespace: alarm
     fields_under_root: true
+  - type: filestream
+    id: filestream-oht-command
+    paths:
+      - /var/log/filebeat-log-source/**/command/command_*
+    fields:
+      data_stream:
+        type: logs
+        dataset: oht
+        namespace: command
+    fields_under_root: true
 
 filebeat.autodiscover:
   providers:

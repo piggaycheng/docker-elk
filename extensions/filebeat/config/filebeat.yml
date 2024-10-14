@@ -82,6 +82,7 @@ monitoring:
 
 output.kafka:
   hosts: ["172.20.125.78:9092"]
+  topic: "logs-filebeat-%{[agent.version]}"
   partition.round_robin:
     reachable_only: false
   required_acks: 1

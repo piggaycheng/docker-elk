@@ -20,6 +20,8 @@ filebeat.inputs:
         dataset: oht
         namespace: alarm
     fields_under_root: true
+    harvester_limit: 100
+    close.on_state_change.inactive: 10s
   - type: filestream
     id: filestream-oht-command
     paths:
@@ -30,6 +32,8 @@ filebeat.inputs:
         dataset: oht
         namespace: command
     fields_under_root: true
+    harvester_limit: 100
+    close.on_state_change.inactive: 10s
 
 filebeat.autodiscover:
   providers:

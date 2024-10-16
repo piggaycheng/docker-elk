@@ -19,6 +19,7 @@ filebeat.inputs:
         type: logs
         dataset: oht
         namespace: alarm
+      out_index: oht
     fields_under_root: true
     harvester_limit: 100
     close.on_state_change.inactive: 10s
@@ -31,6 +32,7 @@ filebeat.inputs:
         type: logs
         dataset: oht
         namespace: command
+      out_index: oht
     fields_under_root: true
     harvester_limit: 100
     close.on_state_change.inactive: 10s
